@@ -20,6 +20,16 @@ from tqdm import tqdm
 
 # train the model
 def training(model, train_loader, epoch_id, config, type_m):
+    """
+    Training function.
+
+    Args:
+        model: (todo): write your description
+        train_loader: (todo): write your description
+        epoch_id: (int): write your description
+        config: (todo): write your description
+        type_m: (todo): write your description
+    """
     # user trainning
     learning_rates = config.lr
     # learning rate decay
@@ -63,6 +73,17 @@ def training(model, train_loader, epoch_id, config, type_m):
 
 
 def evaluation(model, helper, testRatings, testNegatives, K, type_m):
+    """
+    Evaluate the model.
+
+    Args:
+        model: (todo): write your description
+        helper: (todo): write your description
+        testRatings: (str): write your description
+        testNegatives: (todo): write your description
+        K: (todo): write your description
+        type_m: (str): write your description
+    """
     model.eval()
     (hits, ndcgs) = helper.evaluate_model(model, testRatings, testNegatives, K, type_m)
     hr, ndcg = np.array(hits).mean(), np.array(ndcgs).mean()

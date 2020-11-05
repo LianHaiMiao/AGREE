@@ -7,6 +7,12 @@ Store parameters
 
 class Config(object):
     def __init__(self):
+        """
+        Initialize embedding and embeddings.
+
+        Args:
+            self: (todo): write your description
+        """
         self.path = './data/CAMRa2011/'
         self.user_dataset = self.path + 'userRating'
         self.group_dataset = self.path + 'groupRating'
