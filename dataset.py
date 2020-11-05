@@ -31,6 +31,13 @@ class GDataset(object):
 
 
     def load_rating_file_as_list(self, filename):
+        """
+        Reads a list of rating files.
+
+        Args:
+            self: (todo): write your description
+            filename: (str): write your description
+        """
         ratingList = []
         with open(filename, "r") as f:
             line = f.readline()
@@ -42,6 +49,13 @@ class GDataset(object):
         return ratingList
 
     def load_negative_file(self, filename):
+        """
+        Loads a negative negative negative negative negative numbers.
+
+        Args:
+            self: (todo): write your description
+            filename: (str): write your description
+        """
         negativeList = []
         with open(filename, "r") as f:
             line = f.readline()
@@ -55,6 +69,13 @@ class GDataset(object):
         return negativeList
 
     def load_rating_file_as_matrix(self, filename):
+        """
+        Loads ascii as a matrix.
+
+        Args:
+            self: (todo): write your description
+            filename: (str): write your description
+        """
         # Get number of users and items
         num_users, num_items = 0, 0
         with open(filename, "r") as f:
@@ -82,6 +103,13 @@ class GDataset(object):
         return mat
 
     def get_train_instances(self, train):
+        """
+        Get training instances of the dataset.
+
+        Args:
+            self: (todo): write your description
+            train: (bool): write your description
+        """
         user_input, pos_item_input, neg_item_input = [], [], []
         num_users = train.shape[0]
         num_items = train.shape[1]
@@ -100,12 +128,26 @@ class GDataset(object):
         return user_input, pi_ni
 
     def get_user_dataloader(self, batch_size):
+        """
+        Returns a tensor for a tensor.
+
+        Args:
+            self: (todo): write your description
+            batch_size: (int): write your description
+        """
         user, positem_negitem_at_u = self.get_train_instances(self.user_trainMatrix)
         train_data = TensorDataset(torch.LongTensor(user), torch.LongTensor(positem_negitem_at_u))
         user_train_loader = DataLoader(train_data, batch_size=batch_size, shuffle=True)
         return user_train_loader
 
     def get_group_dataloader(self, batch_size):
+        """
+        Gets the tensors.
+
+        Args:
+            self: (todo): write your description
+            batch_size: (int): write your description
+        """
         group, positem_negitem_at_g = self.get_train_instances(self.group_trainMatrix)
         train_data = TensorDataset(torch.LongTensor(group), torch.LongTensor(positem_negitem_at_g))
         group_train_loader = DataLoader(train_data, batch_size=batch_size, shuffle=True)

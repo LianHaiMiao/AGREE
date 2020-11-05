@@ -10,6 +10,18 @@ import torch.nn as nn
 
 class AGREE(nn.Module):
     def __init__(self, num_users, num_items, num_groups, embedding_dim, group_member_dict, drop_ratio):
+        """
+        Initialize the network states.
+
+        Args:
+            self: (todo): write your description
+            num_users: (int): write your description
+            num_items: (int): write your description
+            num_groups: (int): write your description
+            embedding_dim: (int): write your description
+            group_member_dict: (dict): write your description
+            drop_ratio: (float): write your description
+        """
         super(AGREE, self).__init__()
         self.userembeds = UserEmbeddingLayer(num_users, embedding_dim)
         self.itemembeds = ItemEmbeddingLayer(num_items, embedding_dim)
@@ -27,6 +39,15 @@ class AGREE(nn.Module):
                 nn.init.xavier_normal_(m.weight)
 
     def forward(self, group_inputs, user_inputs, item_inputs):
+        """
+        Parameters ---------- group_inputs : tuple )
+
+        Args:
+            self: (todo): write your description
+            group_inputs: (todo): write your description
+            user_inputs: (todo): write your description
+            item_inputs: (todo): write your description
+        """
         # train group
         if (group_inputs is not None) and (user_inputs is None):
             out = self.grp_forward(group_inputs, item_inputs)
@@ -37,6 +58,14 @@ class AGREE(nn.Module):
 
     # group forward
     def grp_forward(self, group_inputs, item_inputs):
+        """
+        Perform a forward computation.
+
+        Args:
+            self: (todo): write your description
+            group_inputs: (todo): write your description
+            item_inputs: (todo): write your description
+        """
         group_embeds = torch.Tensor()
         item_embeds_full = self.itemembeds(torch.LongTensor(item_inputs))
         for i, j in zip(group_inputs, item_inputs):
@@ -60,6 +89,14 @@ class AGREE(nn.Module):
 
     # user forward
     def usr_forward(self, user_inputs, item_inputs):
+        """
+        Forward computation on a single layer.
+
+        Args:
+            self: (todo): write your description
+            user_inputs: (todo): write your description
+            item_inputs: (todo): write your description
+        """
         user_embeds = self.userembeds(user_inputs)
         item_embeds = self.itemembeds(item_inputs)
         element_embeds = torch.mul(user_embeds, item_embeds)  # Element-wise product
@@ -69,36 +106,89 @@ class AGREE(nn.Module):
 
 class UserEmbeddingLayer(nn.Module):
     def __init__(self, num_users, embedding_dim):
+        """
+        Initialize the embedding.
+
+        Args:
+            self: (todo): write your description
+            num_users: (int): write your description
+            embedding_dim: (int): write your description
+        """
         super(UserEmbeddingLayer, self).__init__()
         self.userEmbedding = nn.Embedding(num_users, embedding_dim)
 
     def forward(self, user_inputs):
+        """
+        Parameters ---------- user_embeds
+
+        Args:
+            self: (todo): write your description
+            user_inputs: (todo): write your description
+        """
         user_embeds = self.userEmbedding(user_inputs)
         return user_embeds
 
 
 class ItemEmbeddingLayer(nn.Module):
     def __init__(self, num_items, embedding_dim):
+        """
+        Initialize the embedding.
+
+        Args:
+            self: (todo): write your description
+            num_items: (int): write your description
+            embedding_dim: (int): write your description
+        """
         super(ItemEmbeddingLayer, self).__init__()
         self.itemEmbedding = nn.Embedding(num_items, embedding_dim)
 
     def forward(self, item_inputs):
+        """
+        Forward the given item.
+
+        Args:
+            self: (todo): write your description
+            item_inputs: (todo): write your description
+        """
         item_embeds = self.itemEmbedding(item_inputs)
         return item_embeds
 
 
 class GroupEmbeddingLayer(nn.Module):
     def __init__(self, number_group, embedding_dim):
+        """
+        Initialize the embedding.
+
+        Args:
+            self: (todo): write your description
+            number_group: (int): write your description
+            embedding_dim: (int): write your description
+        """
         super(GroupEmbeddingLayer, self).__init__()
         self.groupEmbedding = nn.Embedding(number_group, embedding_dim)
 
     def forward(self, num_group):
+        """
+        Groups num_groups of num_group
+
+        Args:
+            self: (todo): write your description
+            num_group: (int): write your description
+        """
         group_embeds = self.groupEmbedding(num_group)
         return group_embeds
 
 
 class AttentionLayer(nn.Module):
     def __init__(self, embedding_dim, drop_ratio=0):
+        """
+        Initialize the embedding.
+
+        Args:
+            self: (todo): write your description
+            embedding_dim: (int): write your description
+            drop_ratio: (float): write your description
+        """
         super(AttentionLayer, self).__init__()
         self.linear = nn.Sequential(
             nn.Linear(embedding_dim, 16),
@@ -108,6 +198,13 @@ class AttentionLayer(nn.Module):
         )
 
     def forward(self, x):
+        """
+        Forward computation.
+
+        Args:
+            self: (todo): write your description
+            x: (todo): write your description
+        """
         out = self.linear(x)
         weight = torch.softmax(out.view(1, -1), dim=1)
         return weight
@@ -115,6 +212,14 @@ class AttentionLayer(nn.Module):
 
 class PredictLayer(nn.Module):
     def __init__(self, embedding_dim, drop_ratio=0):
+        """
+        Initialize the network.
+
+        Args:
+            self: (todo): write your description
+            embedding_dim: (int): write your description
+            drop_ratio: (float): write your description
+        """
         super(PredictLayer, self).__init__()
         self.linear = nn.Sequential(
             nn.Linear(embedding_dim, 8),
@@ -124,6 +229,13 @@ class PredictLayer(nn.Module):
         )
 
     def forward(self, x):
+        """
+        Forward computation.
+
+        Args:
+            self: (todo): write your description
+            x: (todo): write your description
+        """
         out = self.linear(x)
         return out
 
